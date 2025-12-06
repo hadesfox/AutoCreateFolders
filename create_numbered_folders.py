@@ -66,7 +66,8 @@ def main():
     print("2. 输入'test'创建test_01文件夹")
     print("3. 输入'test 5'批量创建test_02至test_06文件夹")
     print("4. 再次输入'test'创建test_07文件夹")
-    print("5. 输入'quit'或'exit'退出脚本")
+    print("5. 输入'changedir'或'cd'切换创建目录")
+    print("6. 输入'quit'或'exit'退出脚本")
     print("=" * 40)
     
     # 设置默认目录为脚本所在目录，也可以让用户自定义
@@ -90,12 +91,39 @@ def main():
     
     while True:
         # 获取用户输入的文件夹名称和数量
-        user_input = input("\n请输入要创建的文件夹名称和数量（如：test 5，输入'quit'退出）: ").strip()
+        user_input = input("\n请输入要创建的文件夹名称和数量（如：test 5，输入'cd'切换目录，'quit'退出）: ").strip()
         
         # 退出条件
         if user_input.lower() in ['quit', 'exit']:
             print("\n✅ 脚本已成功退出！")
             break
+        
+        # 切换目录指令
+        if user_input.lower() in ['changedir', 'cd']:
+            print("\n=== 切换创建目录 ===")
+            print(f"当前目录：{base_dir}")
+            new_dir = input("请输入新的创建目录（直接回车保持当前目录）: ").strip()
+            
+            # 如果用户没有输入新目录，保持当前目录
+            if not new_dir:
+                print("已取消切换目录，保持当前目录不变。")
+                continue
+            
+            # 检查新目录是否存在
+            if not os.path.exists(new_dir):
+                print(f"❌ 错误：目录 {new_dir} 不存在！")
+                continue
+            
+            # 检查新目录是否可写
+            if not os.access(new_dir, os.W_OK):
+                print(f"❌ 错误：没有权限写入目录 {new_dir}！")
+                continue
+            
+            # 更新当前目录
+            base_dir = new_dir
+            print(f"✅ 已切换创建目录至：{base_dir}")
+            print("=" * 40)
+            continue
         
         # 解析用户输入，分离文件夹名称和数量
         parts = user_input.split()
